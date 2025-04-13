@@ -2,8 +2,9 @@ import { useState } from 'react';
 import AnimatedSection from './AnimatedSection';
 import { Mail, MapPin, Send, Github, Linkedin } from 'lucide-react';
 import { cn } from '@/lib/utils';
-// import emailjs from 'emailjs-com';
+import emailjs from 'emailjs-com';
 import { useToast } from "@/hooks/use-toast";
+
 
 const Contact = () => {
   const { toast } = useToast();
@@ -23,46 +24,72 @@ const Contact = () => {
     });
   };
 
+  
+  // Function to handle form submission
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+  
+  // Grab the form fields
+  const { name, email, message } = formState;
+
+  // Basic validation
+  if (name.trim().length < 3) {
+    alert("Name must be at least 3 characters long.");
+    return;
+  }
+
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    alert("Please enter a valid email address.");
+    return;
+  }
+
+  if (message.trim().length < 10) {
+    alert("Message must be at least 10 characters long.");
+    return;
+  }
     setIsSubmitting(true);
-    
+  
     try {
-      // Replace these with your actual EmailJS service, template and user IDs
-      // const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
-      // const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
-      // const userId = import.meta.env.VITE_EMAILJS_USER_ID;
-      
+      const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!;
+      const templateId = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID!;
+      const userId = process.env.NEXT_PUBLIC_EMAILJS_USER_ID!;
+
+      if (!serviceId || !templateId || !userId) {
+        throw new Error("Missing EmailJS environment variables.");
+      }
+  
       const templateParams = {
         from_name: formState.name,
         from_email: formState.email,
         message: formState.message,
       };
-      
-      // await emailjs.send(serviceId, templateId, templateParams, userId);
-      
-      setIsSubmitting(false);
+  
+      await emailjs.send(serviceId, templateId, templateParams, userId);
+  
       setIsSubmitted(true);
       setFormState({ name: '', email: '', message: '' });
-      
+  
       toast({
         title: "Message sent!",
         description: "Your message has been sent successfully. I'll get back to you soon.",
       });
-      
-      // Reset submission status after 5 seconds
+  
       setTimeout(() => setIsSubmitted(false), 5000);
     } catch (error) {
       console.error('Failed to send the message:', error);
       setIsSubmitting(false);
-      
+  
       toast({
         title: "Message failed to send",
         description: "There was an error sending your message. Please try again.",
         variant: "destructive",
       });
     }
+    finally {
+      setIsSubmitting(false);
+    }
   };
+  
 
   return (
     <section id="contact" className="py-20 px-6">
