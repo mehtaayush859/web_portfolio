@@ -1,4 +1,4 @@
 User-agent: *
-Disallow:
-
+Disallow: /admin
+Disallow: /login
 Sitemap: https://amehta.vercel.app/sitemap.xml
