@@ -14,26 +14,41 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "AM-Portfolio",
-    template: "%s | AM-Portfolio",
+    default: "Ayush Mehta | AM Portfolio",
+    template: "%s | Ayush Mehta Portfolio",
   },
-  description: "Ayush Mehta Portfolio",
-  metadataBase: new URL("https://example.com"),
+  description: "Discover Ayush Mehta's portfolio showcasing software engineering and cybersecurity projects.",
+  metadataBase: new URL("https://amehta.vercel.app"),
   openGraph: {
-    title: "AM-Portfolio",
-    description: "Ayush Mehta Portfolio",
-    images: [{ url: "/og-image.png" }],
+    title: "Ayush Mehta | Software Engineer | AM Portfolio",
+    description: "Explore Ayush Mehta's portfolio featuring projects, skills, and achievements.",
+    url: "https://amehta.vercel.app",
+    type: "website",
+    images: [
+      {
+        url: "https://amehta.vercel.app/profile.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Ayush Mehta Portfolio Image",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Ayush Mehta | AM Portfolio",
+    description: "Explore projects, skills, and achievements from Ayush Mehta.",
+    images: ["https://amehta.vercel.app/profile.jpg"],
   },
   alternates: {
-    canonical: "https://example.com",
+    canonical: "https://amehta.vercel.app",
   },
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="en">
       <body

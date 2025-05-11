@@ -1,15 +1,42 @@
 "use client";
-import { useEffect } from 'react';
-import Navbar from '@/components/Navbar';
-import Hero from '@/components/Hero';
-import About from '@/components/About';
-import Projects from '@/components/Projects';
-import Skills from '@/components/Skills';
-import Contact from '@/components/Contact';
-import Footer from '@/components/Footer';
+import { Metadata } from "next";
+import Navbar from "@/components/Navbar";
+import Hero from "@/components/Hero";
+import About from "@/components/About";
+import Projects from "@/components/Projects";
+import Skills from "@/components/Skills";
+import Contact from "@/components/Contact";
+import Footer from "@/components/Footer";
+
+// Page-specific metadata for the Home page
+export const metadata: Metadata = {
+  title: "Home | Ayush Mehta Portfolio",
+  description:
+    "Welcome to Ayush Mehta's portfolio showcasing software engineering and cybersecurity projects.",
+  openGraph: {
+    title: "Home | Ayush Mehta Portfolio",
+    description:
+      "Explore Ayush Mehta's portfolio featuring projects, skills, and achievements.",
+    url: "https://amehta.vercel.app",
+    images: [
+      {
+        url: "https://amehta.vercel.app/profile.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Ayush Mehta Portfolio Image",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Home | Ayush Mehta Portfolio",
+    description:
+      "Explore projects, skills, and achievements from Ayush Mehta.",
+    images: ["https://amehta.vercel.app/profile.jpg"],
+  },
+};
 
 const Index = () => {
-
   return (
     <div className="bg-pattern min-h-screen">
       <Navbar />
