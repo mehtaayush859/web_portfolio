@@ -21,16 +21,6 @@ Designed with a cybersecurity and distributed systems aesthetic, featuring inter
   - **3D Mascot Tour Guide:** Interactive floating companion offering section-specific insights and walkthrough guidance.
   - **Interactive Terminal:** Functional command-line interface in the hero section supporting commands like `help`, `skills`, `projects`, `contact`, and `clear`.
 
-- **📱 Mobile-First Gesture Experience:**
-  - **Touch-Swipe Snap Track:** Career Journey, Academic Background, Projects, and Skills feature responsive `← Swipe →` horizontal carousels with native CSS scroll-snap on mobile devices.
-  - **Progressive Disclosure Modals:** Tap any card to open clean, detailed modals for career achievements, education coursework, and project architecture deep dives.
-
-- **🔍 Comprehensive SEO & Discoverability:**
-  - **JSON-LD Schema.org Structured Data** (`Person`, `WebSite`, `ProfilePage`) for Google Knowledge Graph.
-  - **Open Graph (1200×630) & Twitter Cards** for rich link previews across LinkedIn, Twitter/X, and messaging apps.
-  - **Dynamic `robots.ts` & `sitemap.ts`** with Google Search Console verification integration.
-  - **Semantic HTML5** with accessible heading hierarchy and image optimizations.
-
 ---
 
 ## 🛠 Tech Stack
@@ -94,15 +84,6 @@ web_portfolio/
    npm run build
    ```
 
----
-
-## 🌐 Custom Domain & Deployment
-
-This project is optimized for zero-config deployment on [Vercel](https://vercel.com):
-
-1. Import your GitHub repository into Vercel.
-2. Under **Project Settings → Domains**, bind your preferred custom domain (e.g. `ayushmehta.tech`, `ayushmehta.is-a.dev`, or `ayushmehta.vercel.app`).
-3. Set the optional `NEXT_PUBLIC_SITE_URL` environment variable if overriding the default canonical URL.
 
 ---
 
