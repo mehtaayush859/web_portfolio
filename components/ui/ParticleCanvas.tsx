@@ -58,9 +58,12 @@ export function ParticleCanvas() {
       const parent = canvas.parentElement;
       if (!parent) return;
 
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
       width = parent.clientWidth;
       height = parent.clientHeight;
+      const isMobile = width < 768;
+
+      // On mobile, use DPR 1 to eliminate high-DPI GPU overhead and make initial paint instantaneous
+      const dpr = isMobile ? 1 : Math.min(window.devicePixelRatio || 1, 2);
 
       canvas.width = width * dpr;
       canvas.height = height * dpr;
@@ -69,10 +72,9 @@ export function ParticleCanvas() {
 
       ctx.scale(dpr, dpr);
 
-      // Density based on viewport area - throttled for mobile/tablets
-      const isMobile = width < 768;
+      // Density based on viewport area - lightweight on mobile
       const count = isMobile
-        ? Math.min(Math.floor((width * height) / 25000), 24)
+        ? Math.min(Math.floor((width * height) / 30000), 16)
         : Math.min(Math.floor((width * height) / 14000), 50);
       particles = [];
 
