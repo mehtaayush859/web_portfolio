@@ -1,28 +1,22 @@
-"use client";
-import { Metadata } from "next";
-import Navbar from "@/components/Navbar";
-import Hero from "@/components/Hero";
-import About from "@/components/About";
-import Projects from "@/components/Projects";
-import Skills from "@/components/Skills";
-import Contact from "@/components/Contact";
-import Footer from "@/components/Footer";
+import * as React from 'react';
+import { HeroSection } from '@/components/sections/HeroSection';
+import { AboutSection } from '@/components/sections/AboutSection';
+import { ProjectsSection } from '@/components/sections/ProjectsSection';
+import { SkillsSection } from '@/components/sections/SkillsSection';
+import { ContactSection } from '@/components/sections/ContactSection';
+import { MascotTourCompanion } from '@/components/ui/MascotTourCompanion';
 
-
-const Index = () => {
+export default function Home() {
   return (
-    <div className="bg-pattern min-h-screen">
-      <Navbar />
-      <main className="content-visible">
-        <Hero />
-        <About />
-        <Projects />
-        <Skills />
-        <Contact />
-      </main>
-      <Footer />
-    </div>
-  );
-};
+    <>
+      <HeroSection />
+      <AboutSection />
+      <ProjectsSection />
+      <SkillsSection />
+      <ContactSection />
 
-export default Index;
+      {/* Floating Interactive 3D Mascot Walkthrough Companion */}
+      <MascotTourCompanion />
+    </>
+  );
+}

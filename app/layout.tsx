@@ -1,46 +1,87 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
+import type { Metadata } from 'next';
+import { Geist, Geist_Mono } from 'next/font/google';
+import { ThemeProvider } from 'next-themes';
+import { ToastProvider } from '@/components/ui/Toast';
+import { Navbar } from '@/components/layout/Navbar';
+import { Footer } from '@/components/layout/Footer';
+import { siteConfig } from '@/data/siteConfig';
+import { getStructuredData } from '@/lib/seo';
+import './globals.css';
 
 const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+  variable: '--font-geist-sans',
+  subsets: ['latin'],
+  display: 'swap',
 });
 
 const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  variable: '--font-geist-mono',
+  subsets: ['latin'],
+  display: 'swap',
 });
 
 export const metadata: Metadata = {
   title: {
-    default: "Ayush Mehta | AM Portfolio",
-    template: "%s | Ayush Mehta Portfolio",
+    default: siteConfig.title,
+    template: `%s | ${siteConfig.name}`,
   },
-  description: "Discover Ayush Mehta's portfolio showcasing software engineering and cybersecurity projects.",
-  metadataBase: new URL("https://amehta.vercel.app"),
+  description: siteConfig.description,
+  metadataBase: new URL(siteConfig.url),
+  alternates: {
+    canonical: siteConfig.url,
+  },
   openGraph: {
-    title: "Ayush Mehta | Software Engineer | AM Portfolio",
-    description: "Explore Ayush Mehta's portfolio featuring projects, skills, and achievements.",
-    url: "https://amehta.vercel.app",
-    type: "website",
+    title: siteConfig.title,
+    description: siteConfig.description,
+    url: siteConfig.url,
+    siteName: `${siteConfig.name} Portfolio`,
+    type: 'website',
     images: [
       {
-        url: "https://amehta.vercel.app/profile.jpg",
+        url: siteConfig.ogImage,
         width: 1200,
         height: 630,
-        alt: "Ayush Mehta Portfolio Image",
+        alt: `${siteConfig.name} Portfolio Image`,
       },
     ],
   },
   twitter: {
-    card: "summary_large_image",
-    title: "Ayush Mehta | AM Portfolio",
-    description: "Explore projects, skills, and achievements from Ayush Mehta.",
-    images: ["https://amehta.vercel.app/profile.jpg"],
+    card: 'summary_large_image',
+    title: siteConfig.title,
+    description: siteConfig.description,
+    images: [siteConfig.ogImage],
   },
-  alternates: {
-    canonical: "https://amehta.vercel.app",
+  keywords: [
+    'Ayush Mehta',
+    'Ayush Mehta Software Engineer',
+    'Ayush Mehta Portfolio',
+    'Ayush Mehta Seattle',
+    'Ayush Mehta Cybersecurity',
+    'Seattle University Computer Science',
+    'Full Stack Engineer',
+    'Cloud Security',
+    'Backend Engineer',
+    'Python Developer',
+  ],
+  authors: [{ name: 'Ayush Mehta', url: siteConfig.url }],
+  creator: 'Ayush Mehta',
+  publisher: 'Ayush Mehta',
+  icons: {
+    icon: '/favicon.ico',
+  },
+  verification: {
+    google: 'googlee612ac228e024a84',
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
   },
 };
 
@@ -49,12 +90,35 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const structuredData = getStructuredData();
+
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(structuredData),
+          }}
+        />
+      </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} min-h-screen bg-background text-text-primary antialiased selection:bg-primary/20 selection:text-primary flex flex-col justify-between`}
       >
-        {children}
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <ToastProvider>
+            <Navbar />
+            <main id="main-content" className="flex-1">
+              {children}
+            </main>
+            <Footer />
+          </ToastProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
