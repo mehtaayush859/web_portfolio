@@ -5,7 +5,6 @@ import { ArrowDown, Github, Linkedin, Mail } from 'lucide-react';
 import { profileData } from '@/data/profile';
 import { Container } from '@/components/ui/Container';
 import { Badge } from '@/components/ui/Badge';
-import { MotionWrapper } from '@/components/motion/MotionWrapper';
 import { ParticleCanvas } from '@/components/ui/ParticleCanvas';
 import { HeroCharacterCard } from '@/components/ui/HeroCharacterCard';
 import { InteractiveTerminal } from '@/components/ui/InteractiveTerminal';
@@ -16,8 +15,10 @@ export function HeroSection() {
       id="home"
       className="relative min-h-screen flex flex-col justify-center items-center pt-28 pb-16 px-4 sm:px-6 overflow-hidden bg-grid-pattern"
     >
-      {/* Interactive Particle Constellation Canvas */}
-      <ParticleCanvas />
+      {/* Interactive Particle Constellation Canvas (Desktop & Tablet only for peak mobile performance) */}
+      <div className="hidden md:block absolute inset-0 pointer-events-none">
+        <ParticleCanvas />
+      </div>
 
       {/* Ambient background glow (CSS only, zero GPU lag) */}
       <div
@@ -31,16 +32,14 @@ export function HeroSection() {
           {/* Left Column: Headline, Bio, CTAs, and Desktop Terminal */}
           <div className="lg:col-span-7 flex flex-col items-center lg:items-start text-center lg:text-left w-full max-w-2xl mx-auto lg:mx-0">
             {/* Status Badge */}
-            <MotionWrapper delay={50} direction="down">
-              <div className="inline-block mb-5">
-                <Badge variant="status" ping className="py-1.5 px-4 text-xs sm:text-sm">
-                  {profileData.tagline}
-                </Badge>
-              </div>
-            </MotionWrapper>
+            <div className="animate-hero-badge inline-block mb-5">
+              <Badge variant="status" ping className="py-1.5 px-4 text-xs sm:text-sm">
+                {profileData.tagline}
+              </Badge>
+            </div>
 
             {/* Headline */}
-            <MotionWrapper delay={150}>
+            <div className="animate-hero-title">
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight mb-5 text-text-primary">
                 Hi, I&apos;m{' '}
                 <span className="relative inline-block text-primary">
@@ -51,17 +50,17 @@ export function HeroSection() {
                   />
                 </span>
               </h1>
-            </MotionWrapper>
+            </div>
 
             {/* Bio Subtitle */}
-            <MotionWrapper delay={250}>
+            <div className="animate-hero-bio">
               <p className="text-base sm:text-lg text-text-muted mb-8 max-w-xl leading-relaxed">
                 {profileData.heroBio}
               </p>
-            </MotionWrapper>
+            </div>
 
             {/* CTAs & Socials */}
-            <MotionWrapper delay={350} className="w-full">
+            <div className="animate-hero-cta w-full">
               <div className="flex flex-col sm:flex-row gap-3.5 justify-center lg:justify-start items-center mb-8 w-full sm:w-auto">
                 <a
                   href="#contact"
@@ -105,19 +104,17 @@ export function HeroSection() {
                   </a>
                 </div>
               </div>
-            </MotionWrapper>
+            </div>
 
             {/* Interactive CLI Terminal: Dedicated to Desktop (avoids mobile touchscreen keyboard popups) */}
-            <MotionWrapper delay={450} className="w-full max-w-xl hidden lg:block">
+            <div className="w-full max-w-xl hidden lg:block">
               <InteractiveTerminal />
-            </MotionWrapper>
+            </div>
           </div>
 
           {/* Right Column: 3D Holographic Character Showcase Card (Desktop only - preserves 3D mouse parallax) */}
           <div className="lg:col-span-5 hidden lg:flex justify-center">
-            <MotionWrapper delay={300} direction="right" className="w-full">
-              <HeroCharacterCard />
-            </MotionWrapper>
+            <HeroCharacterCard />
           </div>
         </div>
       </Container>

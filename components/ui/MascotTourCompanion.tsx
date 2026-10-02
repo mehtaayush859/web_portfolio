@@ -74,8 +74,10 @@ export function MascotTourCompanion() {
     return () => window.removeEventListener('portfolio-modal-state', handleModalState);
   }, []);
 
-  // Robust viewport-based active section detection
+  // Robust viewport-based active section detection (only active when guide is expanded)
   React.useEffect(() => {
+    if (isMinimized) return;
+
     const sectionIds = ['home', 'about', 'projects', 'skills', 'contact'];
     let ticking = false;
 
@@ -112,7 +114,7 @@ export function MascotTourCompanion() {
     window.addEventListener('scroll', handleScroll, { passive: true });
     handleScroll();
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [isMinimized]);
 
   const currentTour = tourSections[activeSection] || tourSections.home;
 

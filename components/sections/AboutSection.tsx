@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { Container } from '@/components/ui/Container';
 import { Heading } from '@/components/ui/Heading';
-import { MotionWrapper } from '@/components/motion/MotionWrapper';
 import { JourneyBranchTimeline } from '@/components/sections/JourneyBranchTimeline';
 
 export function AboutSection() {
@@ -9,7 +8,7 @@ export function AboutSection() {
     <section id="about" className="py-20 sm:py-28 border-t border-border/60 bg-surface/30">
       <Container size="lg">
         {/* Section Header */}
-        <MotionWrapper className="text-center mb-12 sm:mb-14">
+        <div className="text-center mb-12 sm:mb-14">
           <span className="text-xs font-mono font-medium text-primary uppercase tracking-widest mb-2.5 block">
             Career &amp; Academic Pathways
           </span>
@@ -19,12 +18,10 @@ export function AboutSection() {
           <p className="mt-3 text-sm sm:text-base text-text-muted max-w-2xl mx-auto leading-relaxed">
             Bridging high-throughput enterprise software engineering, automated security operations, and advanced graduate computer science studies.
           </p>
-        </MotionWrapper>
+        </div>
 
         {/* Experience Timeline followed by Education */}
-        <MotionWrapper>
-          <JourneyBranchTimeline />
-        </MotionWrapper>
+        <JourneyBranchTimeline />
       </Container>
     </section>
   );

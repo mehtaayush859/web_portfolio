@@ -15,8 +15,18 @@ export function ScrollReset() {
         window.history.replaceState(null, '', window.location.pathname);
       }
 
+      // Temporarily disable CSS smooth scrolling to guarantee 0ms instant jump to top
+      const html = document.documentElement;
+      const prevBehavior = html.style.scrollBehavior;
+      html.style.scrollBehavior = 'auto';
+
       // Scroll immediately to beginning
-      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+      window.scrollTo(0, 0);
+
+      // Restore smooth scroll behavior for in-page user navigation
+      requestAnimationFrame(() => {
+        html.style.scrollBehavior = prevBehavior || '';
+      });
     }
   }, []);
 

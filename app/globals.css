@@ -128,6 +128,31 @@ body {
   scrollbar-width: none;
 }
 
+/* Instant Hero Above-The-Fold CSS Animations (bypasses JS hydration and Safari IntersectionObserver delays) */
+@keyframes heroFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-hero-badge {
+  animation: heroFadeIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) 0.05s both;
+}
+.animate-hero-title {
+  animation: heroFadeIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) 0.12s both;
+}
+.animate-hero-bio {
+  animation: heroFadeIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
+}
+.animate-hero-cta {
+  animation: heroFadeIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) 0.28s both;
+}
+
 /* Strict Accessibility: Reduced Motion Override */
 @media (prefers-reduced-motion: reduce) {
   *,
