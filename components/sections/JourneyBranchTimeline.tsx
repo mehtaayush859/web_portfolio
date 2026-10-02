@@ -44,8 +44,8 @@ export function JourneyBranchTimeline() {
 
   return (
     <div className="w-full">
-      {/* 3D Companion Overview Bar */}
-      <div className="flex items-start gap-4 p-4 sm:p-5 rounded-2xl bg-surface/90 border border-border/80 shadow-lg backdrop-blur-md mb-10">
+      {/* 3D Companion Overview Bar (Optimized: zero backdrop-blur lag, hidden on mobile so Work Experience loads immediately) */}
+      <div className="hidden sm:flex items-start gap-4 p-4 sm:p-5 rounded-2xl bg-surface border border-border/80 shadow-md mb-8">
         <div className="relative shrink-0 w-12 h-12 rounded-xl overflow-hidden border border-primary/30 bg-surface-elevated">
           <Image
             src="/robot-mascot-transparent.png"

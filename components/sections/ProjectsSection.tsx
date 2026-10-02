@@ -29,15 +29,11 @@ export function ProjectsSection() {
           </p>
         </MotionWrapper>
 
-        {/* 3D Mascot Companion Dialogue Banner (Generic, Professional, No Specific Tech Lists) */}
-        <MotionWrapper delay={100} className="mb-10">
-          <div className="p-4 sm:p-5 rounded-2xl bg-surface/80 border border-primary/30 backdrop-blur-xl shadow-xl flex flex-col sm:flex-row items-center gap-4">
-            <div className="shrink-0 relative w-14 h-14 sm:w-16 sm:h-16 rounded-xl border border-primary/30 bg-gradient-to-tr from-primary/20 via-accent/15 to-transparent flex items-center justify-center overflow-hidden">
-              <motion.div
-                animate={{ y: [-2, 2, -2] }}
-                transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
-                className="relative w-full h-full"
-              >
+        {/* 3D Mascot Companion Dialogue Banner (Optimized: hidden on mobile for instant card access, solid background on desktop) */}
+        <div className="hidden sm:block mb-10">
+          <div className="p-4 sm:p-5 rounded-2xl bg-surface border border-primary/30 shadow-md flex flex-col sm:flex-row items-center gap-4">
+            <div className="shrink-0 relative w-14 h-14 sm:w-16 sm:h-16 rounded-xl border border-primary/30 bg-primary/10 flex items-center justify-center overflow-hidden">
+              <div className="relative w-full h-full">
                 <Image
                   src="/dev-character-transparent.png"
                   alt="3D Mascot Companion"
@@ -45,7 +41,7 @@ export function ProjectsSection() {
                   sizes="64px"
                   className="object-contain p-1 drop-shadow-md"
                 />
-              </motion.div>
+              </div>
             </div>
 
             <div className="flex-1 text-center sm:text-left min-w-0">
@@ -69,7 +65,7 @@ export function ProjectsSection() {
               <ArrowUpRight className="h-3 w-3 text-text-subtle" />
             </a>
           </div>
-        </MotionWrapper>
+        </div>
 
         {/* Mobile Swipe Gesture Hint Bar */}
         <div className="flex md:hidden items-center justify-center px-1 mb-4 text-xs font-mono text-text-subtle">
