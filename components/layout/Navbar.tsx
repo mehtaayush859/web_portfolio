@@ -33,19 +33,23 @@ export function Navbar() {
   }, []);
 
   const handleScrollToSection = (sectionId: string) => {
+    document.body.style.overflow = '';
     setMobileMenuOpen(false);
-    const element = document.getElementById(sectionId);
-    if (element) {
-      const navOffset = 80;
-      const elementPosition = element.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.scrollY - navOffset;
 
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: 'smooth',
+    // Double RAF allows the layout to restore before triggering smooth GPU scroll
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        if (sectionId === 'home') {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        } else {
+          const element = document.getElementById(sectionId);
+          if (element) {
+            element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        }
+        window.history.replaceState(null, '', `#${sectionId}`);
       });
-      window.history.pushState(null, '', `#${sectionId}`);
-    }
+    });
   };
 
   return (
@@ -116,16 +120,15 @@ export function Navbar() {
           {/* Mobile Actions */}
           <div className="flex items-center gap-2 md:hidden">
             <ThemeToggle />
-            <Button
-              variant="outline"
-              size="icon"
+            <button
+              type="button"
               onClick={() => setMobileMenuOpen(true)}
               aria-expanded={mobileMenuOpen}
-              aria-label="Open menu"
-              className="text-text-primary"
+              aria-label="Open navigation menu"
+              className="flex items-center justify-center h-10 w-10 rounded-lg border border-border bg-surface text-text-primary hover:bg-surface-elevated active:scale-95 transition-transform cursor-pointer"
             >
               <Menu className="h-5 w-5" />
-            </Button>
+            </button>
           </div>
         </div>
       </header>

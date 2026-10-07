@@ -44,13 +44,21 @@ const tourSections: Record<string, SectionTourData> = {
     stepNumber: 4,
     sectionName: 'STAGE 04: TECHNICAL SKILLS',
     speech: "Organized across 6 core engineering domains: backend architectures, cloud infrastructure, and cybersecurity defense!",
+    nextId: 'certifications',
+    nextLabel: 'Next: Certifications',
+  },
+  certifications: {
+    id: 'certifications',
+    stepNumber: 5,
+    sectionName: 'STAGE 05: CERTIFICATIONS',
+    speech: "Ayush holds credentials across Cisco Networking, DeepLearning.AI Machine Learning Math, and DataCamp Applied ML!",
     nextId: 'contact',
     nextLabel: 'Next: Get In Touch',
   },
   contact: {
     id: 'contact',
-    stepNumber: 5,
-    sectionName: 'STAGE 05: GET IN TOUCH',
+    stepNumber: 6,
+    sectionName: 'STAGE 06: GET IN TOUCH',
     speech: "Ayush is actively open to Software Engineer & Security Engineer opportunities. Send him a dispatch!",
     nextId: 'home',
     nextLabel: 'Back to Top ↑',
@@ -74,11 +82,11 @@ export function MascotTourCompanion() {
     return () => window.removeEventListener('portfolio-modal-state', handleModalState);
   }, []);
 
-  // Robust viewport-based active section detection (only active when guide is expanded)
+  // Robust viewport-based active section detection (only active when guide is expanded on desktop)
   React.useEffect(() => {
-    if (isMinimized) return;
+    if (isMinimized || typeof window === 'undefined' || window.innerWidth < 640) return;
 
-    const sectionIds = ['home', 'about', 'projects', 'skills', 'contact'];
+    const sectionIds = ['home', 'about', 'projects', 'skills', 'certifications', 'contact'];
     let ticking = false;
 
     const handleScroll = () => {
@@ -133,7 +141,7 @@ export function MascotTourCompanion() {
   if (isModalOpen) return null;
 
   return (
-    <aside aria-label="Interactive Tour Companion" className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 select-none">
+    <aside aria-label="Interactive Tour Companion" className="hidden sm:block fixed sm:bottom-6 sm:right-6 z-50 select-none">
       <AnimatePresence mode="wait">
         {isMinimized ? (
           /* Minimized Floating Mascot Badge */
@@ -226,7 +234,7 @@ export function MascotTourCompanion() {
             {/* Action Buttons */}
             <div className="mt-3 pt-2 border-t border-border/70 flex items-center justify-between gap-2">
               <span className="text-[10px] text-text-subtle">
-                Step {currentTour.stepNumber} of 5
+                Step {currentTour.stepNumber} of 6
               </span>
 
               <button

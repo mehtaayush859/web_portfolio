@@ -7,41 +7,26 @@ import { Button } from './Button';
 
 export function ThemeToggle() {
   const { resolvedTheme, setTheme } = useTheme();
-  const [mounted, setMounted] = React.useState(false);
 
-  React.useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (!mounted) {
-    return (
-      <Button
-        variant="ghost"
-        size="icon"
-        aria-label="Toggle theme"
-        className="opacity-0"
-      >
-        <span className="h-5 w-5" />
-      </Button>
-    );
-  }
-
-  const isDark = resolvedTheme === 'dark';
+  const toggleTheme = () => {
+    // If resolvedTheme is available, toggle it; otherwise check document.documentElement class
+    const isDark = resolvedTheme
+      ? resolvedTheme === 'dark'
+      : typeof document !== 'undefined' && document.documentElement.classList.contains('dark');
+    setTheme(isDark ? 'light' : 'dark');
+  };
 
   return (
     <Button
       variant="ghost"
       size="icon"
-      onClick={() => setTheme(isDark ? 'light' : 'dark')}
-      aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
-      title={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
-      className="relative overflow-hidden text-text-muted hover:text-primary transition-colors"
+      onClick={toggleTheme}
+      aria-label="Toggle color theme"
+      title="Toggle color theme"
+      className="relative overflow-hidden text-text-muted hover:text-primary transition-colors cursor-pointer"
     >
-      {isDark ? (
-        <Sun className="h-5 w-5 transition-transform duration-300 hover:rotate-45" />
-      ) : (
-        <Moon className="h-5 w-5 transition-transform duration-300 hover:-rotate-12" />
-      )}
+      <Sun className="hidden dark:block h-5 w-5 transition-transform duration-300 hover:rotate-45" />
+      <Moon className="block dark:hidden h-5 w-5 transition-transform duration-300 hover:-rotate-12" />
     </Button>
   );
 }

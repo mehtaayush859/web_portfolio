@@ -24,6 +24,11 @@ export function ParticleCanvas() {
     let animationFrameId: number;
     let isVisible = true;
 
+    // Completely skip canvas context and animations on mobile viewports (< 768px)
+    if (typeof window !== 'undefined' && window.innerWidth < 768) {
+      return;
+    }
+
     // Check prefers-reduced-motion
     const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
     if (mediaQuery.matches) {

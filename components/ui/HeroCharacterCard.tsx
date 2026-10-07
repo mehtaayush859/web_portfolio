@@ -107,6 +107,7 @@ export function HeroCharacterCard() {
               src="/dev-character-transparent.png"
               alt="3D Developer Companion Mascot holding holographic code tablet"
               fill
+              loading="eager"
               sizes="(max-width: 768px) 90vw, 460px"
               className="object-contain object-center transition-transform duration-500 ease-out group-hover:scale-105 drop-shadow-[0_15px_25px_rgba(0,0,0,0.5)] dark:drop-shadow-[0_20px_35px_rgba(0,0,0,0.8)]"
             />

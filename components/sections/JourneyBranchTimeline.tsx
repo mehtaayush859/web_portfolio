@@ -20,9 +20,14 @@ import {
   type CareerItem,
   type EducationItem,
 } from '@/data/profile';
+import dynamic from 'next/dynamic';
 import { Card } from '@/components/ui/Card';
-import { DetailModal } from '@/components/ui/DetailModal';
 import { cn } from '@/lib/utils';
+
+const DetailModal = dynamic(
+  () => import('@/components/ui/DetailModal').then((mod) => mod.DetailModal),
+  { ssr: false }
+);
 
 export function JourneyBranchTimeline() {
   const [filter, setFilter] = React.useState<'all' | 'security' | 'software'>('all');
@@ -30,7 +35,7 @@ export function JourneyBranchTimeline() {
   const [selectedEdu, setSelectedEdu] = React.useState<EducationItem | null>(null);
   const careerScrollRef = React.useRef<HTMLDivElement>(null);
 
-  // When filter changes, reset horizontal track to first card
+  // When filter changes, smoothly reset horizontal track to first card
   React.useEffect(() => {
     if (careerScrollRef.current) {
       careerScrollRef.current.scrollTo({ left: 0, behavior: 'smooth' });
@@ -51,6 +56,7 @@ export function JourneyBranchTimeline() {
             src="/robot-mascot-transparent.png"
             alt="Career Companion Mascot"
             fill
+            loading="lazy"
             sizes="48px"
             className="object-contain p-1"
           />
@@ -133,22 +139,23 @@ export function JourneyBranchTimeline() {
         {/* Mobile Swipe Gesture Hint Bar */}
         <div className="flex md:hidden items-center justify-center px-1 mb-4 text-xs font-mono text-text-subtle">
           <span className="flex items-center gap-1.5 text-primary font-semibold">
-            <span>← Swipe →</span>
+            <span>← Swipe Roles →</span>
           </span>
         </div>
 
         {/* Chronological Career Container: Touch-Swipe Snap Track on mobile, Vertical Timeline Spine on desktop */}
         <div
           ref={careerScrollRef}
-          className="flex md:block overflow-x-auto md:overflow-visible snap-x snap-mandatory no-scrollbar gap-4 pt-2 pb-4 -mx-4 px-4 sm:mx-0 sm:px-0 md:relative md:border-l-2 md:border-border/80 md:ml-3 md:sm:ml-5 md:pl-5 md:sm:pl-8 md:space-y-8"
+          className="flex md:block overflow-x-auto md:overflow-visible snap-x snap-mandatory swipe-track no-scrollbar gap-4 pt-2 pb-4 -mx-4 px-4 sm:mx-0 sm:px-0 scroll-pl-4 scroll-pr-4 md:relative md:border-l-2 md:border-border/80 md:ml-3 md:sm:ml-5 md:pl-5 md:sm:pl-8 md:space-y-8"
         >
           {filteredCareer.map((item) => {
             const isCurrent = item.employmentType === 'Current Role' || item.period.includes('Present');
+            const isAmazon = item.organization.toLowerCase() === 'amazon';
 
             return (
               <div
                 key={item.id}
-                className="w-[88vw] max-w-[350px] shrink-0 snap-center md:w-full md:max-w-none md:shrink flex flex-col relative group"
+                className="w-[86vw] max-w-[340px] sm:max-w-[380px] shrink-0 snap-start md:w-full md:max-w-none md:shrink flex flex-col relative group"
               >
                 {/* Timeline Node Dot (Desktop only) */}
                 <div
@@ -164,7 +171,7 @@ export function JourneyBranchTimeline() {
                 <Card
                   interactive
                   onClick={() => setSelectedCareer(item)}
-                  className="p-5 sm:p-6 border-border hover:border-primary/50 transition-all duration-200 h-full flex flex-col justify-between cursor-pointer group active:scale-[0.99] select-none"
+                  className="p-5 sm:p-6 transition-[border-color,background-color,box-shadow] duration-200 h-full flex flex-col justify-between cursor-pointer group select-none border-border hover:border-primary/50"
                 >
                   <div>
                     {/* Top Row: Role Name on top, Period on right */}
@@ -184,9 +191,15 @@ export function JourneyBranchTimeline() {
 
                     {/* Organization, Location & Employment Status */}
                     <div className="flex flex-wrap items-center gap-2 text-xs sm:text-sm text-text-muted mb-3">
-                      <span className="font-semibold text-text-primary">
-                        {item.organization}
-                      </span>
+                      {isAmazon ? (
+                        <span className="font-semibold text-amber-400">
+                          Amazon
+                        </span>
+                      ) : (
+                        <span className="font-semibold text-text-primary">
+                          {item.organization}
+                        </span>
+                      )}
                       <span>•</span>
                       <span className="flex items-center gap-1 text-xs text-text-subtle font-mono">
                         <MapPin className="h-3 w-3" />
@@ -206,18 +219,18 @@ export function JourneyBranchTimeline() {
                     </div>
 
                     {/* Single Tailored Short Point */}
-                    <p className="text-xs sm:text-sm text-text-muted leading-relaxed line-clamp-2">
+                    <p className="text-xs sm:text-sm text-text-muted leading-relaxed">
                       {item.summary}
                     </p>
                   </div>
 
-                  {/* Card Footer: Exactly 2 Top Skills + Sleek Tap Indicator */}
+                  {/* Card Footer: Top Skills + Sleek Tap Indicator */}
                   <div className="pt-3 mt-4 border-t border-border/60 flex items-center justify-between gap-2">
                     <div className="flex items-center gap-1.5 overflow-hidden">
                       {item.tech.slice(0, 2).map((t, idx) => (
                         <span
                           key={idx}
-                          className="px-2 py-0.5 rounded text-[10px] sm:text-[11px] font-mono bg-surface-elevated border border-border/70 text-text-subtle truncate max-w-[120px]"
+                          className="px-2 py-0.5 rounded text-[10px] sm:text-[11px] font-mono truncate max-w-[120px] border bg-surface-elevated border-border/70 text-text-subtle"
                         >
                           {t}
                         </span>
@@ -225,7 +238,7 @@ export function JourneyBranchTimeline() {
                     </div>
 
                     <div className="flex items-center gap-1 text-[11px] font-mono font-semibold text-primary group-hover:text-primary-hover group-hover:translate-x-0.5 transition-all shrink-0">
-                      <span className="hidden sm:inline">Details</span>
+                      <span>Details</span>
                       <ArrowUpRight className="h-3.5 w-3.5" />
                     </div>
                   </div>
@@ -253,24 +266,24 @@ export function JourneyBranchTimeline() {
         </div>
 
         {/* Mobile Swipe Gesture Hint Bar */}
-        <div className="flex lg:hidden items-center justify-center px-1 mb-4 text-xs font-mono text-text-subtle">
+        <div className="flex md:hidden items-center justify-center px-1 mb-4 text-xs font-mono text-text-subtle">
           <span className="flex items-center gap-1.5 text-accent font-semibold">
-            <span>← Swipe →</span>
+            <span>← Swipe Academic →</span>
           </span>
         </div>
 
-        {/* 2-Column Academic Container: Native Touch-Swipe Snap on mobile, 2-Col Grid on desktop */}
-        <div className="flex lg:grid lg:grid-cols-2 gap-4 lg:gap-6 overflow-x-auto lg:overflow-visible snap-x snap-mandatory no-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0 pt-2 pb-4">
+        {/* 2-Column Academic Container: Native Touch-Swipe Snap on mobile, 2-Col Grid on tablet/desktop */}
+        <div className="flex md:grid md:grid-cols-2 gap-4 lg:gap-6 overflow-x-auto md:overflow-visible snap-x snap-mandatory swipe-track no-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0 pt-2 pb-4 scroll-pl-4 scroll-pr-4">
           {educationExperiences.map((edu) => (
             <div
               key={edu.id}
-              className="w-[88vw] max-w-[350px] shrink-0 snap-center lg:w-auto lg:max-w-none lg:shrink flex flex-col"
+              className="w-[86vw] max-w-[340px] sm:max-w-[380px] shrink-0 snap-start md:w-auto md:max-w-none md:shrink flex flex-col"
             >
               {/* Education Card: Entire Card Clickable */}
               <Card
                 interactive
                 onClick={() => setSelectedEdu(edu)}
-                className="p-5 sm:p-6 flex flex-col justify-between border-border hover:border-accent/50 transition-all duration-200 h-full cursor-pointer group active:scale-[0.99] select-none"
+                className="p-5 sm:p-6 flex flex-col justify-between border-border hover:border-accent/50 transition-[border-color,background-color,box-shadow] duration-200 h-full cursor-pointer group select-none"
               >
                 <div>
                   {/* Top Row: Responsive Degree on top, Period on right */}
@@ -318,7 +331,7 @@ export function JourneyBranchTimeline() {
                   </div>
 
                   {/* Single Tailored Short Point */}
-                  <p className="text-xs sm:text-sm text-text-muted leading-relaxed line-clamp-2">
+                  <p className="text-xs sm:text-sm text-text-muted leading-relaxed">
                     {edu.summary}
                   </p>
                 </div>

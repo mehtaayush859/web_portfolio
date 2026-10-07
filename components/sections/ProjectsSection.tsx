@@ -2,14 +2,18 @@
 
 import * as React from 'react';
 import Image from 'next/image';
-import { motion } from 'motion/react';
+import dynamic from 'next/dynamic';
 import { Sparkles, ArrowUpRight, Github } from 'lucide-react';
 import { projectsData, githubProfileUrl, type Project } from '@/data/projects';
 import { Container } from '@/components/ui/Container';
 import { Heading } from '@/components/ui/Heading';
 import { ProjectCard } from '@/components/ui/ProjectCard';
-import { DetailModal } from '@/components/ui/DetailModal';
 import { MotionWrapper } from '@/components/motion/MotionWrapper';
+
+const DetailModal = dynamic(
+  () => import('@/components/ui/DetailModal').then((mod) => mod.DetailModal),
+  { ssr: false }
+);
 
 export function ProjectsSection() {
   const [selectedProject, setSelectedProject] = React.useState<Project | null>(null);
@@ -75,11 +79,11 @@ export function ProjectsSection() {
         </div>
 
         {/* 4-Card Responsive Container: Native Touch-Swipe Snap on mobile, 2-Col Grid on tablet/desktop */}
-        <div className="flex md:grid md:grid-cols-2 gap-4 sm:gap-8 overflow-x-auto md:overflow-visible snap-x snap-mandatory no-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0 pt-2 pb-4 mb-10 md:mb-14 items-stretch">
+        <div className="flex md:grid md:grid-cols-2 gap-4 sm:gap-8 overflow-x-auto md:overflow-visible snap-x snap-mandatory swipe-track no-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0 pt-2 pb-4 mb-10 md:mb-14 items-stretch scroll-pl-4 scroll-pr-4">
           {projectsData.map((project, index) => (
             <div
               key={project.id}
-              className="w-[86vw] max-w-[340px] shrink-0 snap-center md:w-auto md:max-w-none md:shrink flex flex-col"
+              className="w-[86vw] max-w-[340px] shrink-0 snap-start md:w-auto md:max-w-none md:shrink flex flex-col"
             >
               <MotionWrapper delay={100 * index} direction="up" className="h-full">
                 <ProjectCard

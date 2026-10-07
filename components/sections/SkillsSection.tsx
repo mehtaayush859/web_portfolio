@@ -2,7 +2,6 @@
 
 import * as React from 'react';
 import Image from 'next/image';
-import { motion } from 'motion/react';
 import {
   Code2,
   Layers,
@@ -141,13 +140,13 @@ export function SkillsSection() {
         </div>
 
         {/* 6 Balanced, Spacious Domain Cards (Touch-Swipe on mobile, 2 Columns on desktop) */}
-        <div className="flex lg:grid lg:grid-cols-2 gap-4 lg:gap-6 overflow-x-auto lg:overflow-visible snap-x snap-mandatory no-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0 pt-2 pb-4 items-stretch">
+        <div className="flex lg:grid lg:grid-cols-2 gap-4 lg:gap-6 overflow-x-auto lg:overflow-visible snap-x snap-mandatory swipe-track no-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0 pt-2 pb-4 items-stretch scroll-pl-4 scroll-pr-4">
           {skillDomains.map((domain, index) => {
             const styles = getAccentStyles(domain.accent);
             return (
               <div
                 key={domain.id}
-                className="w-[86vw] max-w-[340px] shrink-0 snap-center lg:w-auto lg:max-w-none lg:shrink flex flex-col"
+                className="w-[86vw] max-w-[340px] shrink-0 snap-start lg:w-auto lg:max-w-none lg:shrink flex flex-col"
               >
                 <MotionWrapper delay={60 * index} direction="up" className="h-full">
                   <Card

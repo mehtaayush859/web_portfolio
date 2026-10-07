@@ -4,6 +4,7 @@ import * as React from 'react';
 import { Terminal, CornerDownLeft, Sparkles, Check, Copy } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { profileData } from '@/data/profile';
+import { triggerEmojiShower } from '@/components/ui/EmojiShower';
 
 interface CommandOutput {
   command: string;
@@ -17,6 +18,7 @@ export function InteractiveTerminal() {
       output: (
         <div className="space-y-1 text-xs font-mono text-text-muted">
           <p className="text-primary font-semibold">✓ System Initialized: Ayush Mehta Portfolio OS</p>
+          <p>• Experience: Former Security Engineer Intern @ <span className="text-amber-400 font-semibold">Amazon</span></p>
           <p>• Education: M.S. in Computer Science @ Seattle University</p>
           <p>• Focus: Advanced Software Engineering &amp; Cybersecurity</p>
           <p className="text-accent font-medium">• Status: Open to Software Engineer &amp; Security Engineer roles</p>
@@ -59,9 +61,34 @@ export function InteractiveTerminal() {
             <p><span className="text-primary font-semibold">journey</span> - Jump to developer journey</p>
             <p><span className="text-primary font-semibold">projects</span> - Jump to featured projects</p>
             <p><span className="text-primary font-semibold">skills</span> - Jump to technical skills matrix</p>
+            <p><span className="text-primary font-semibold">certs</span> - View verified certifications (Cisco, DeepLearning, DataCamp)</p>
+            <p><span className="text-primary font-semibold">pulse</span> - View live visitor telemetry &amp; check-in</p>
             <p><span className="text-primary font-semibold">contact</span> - Jump to contact dispatch</p>
             <p><span className="text-primary font-semibold">whoami</span> - Developer bio summary</p>
             <p><span className="text-primary font-semibold">clear</span> - Clear terminal history</p>
+          </div>
+        );
+        break;
+      case 'certs':
+      case 'certifications':
+        res = (
+          <div className="text-xs text-text-muted space-y-1">
+            <p className="text-primary font-semibold">Navigating to Verified Certifications...</p>
+            <p>• CCNAv7: Introduction to Networks (Cisco Networking Academy)</p>
+            <p>• Probability &amp; Statistics for Machine Learning (DeepLearning.AI)</p>
+            <p>• Supervised Learning with scikit-learn (DataCamp)</p>
+          </div>
+        );
+        navigateToSection('certifications');
+        break;
+      case 'pulse':
+      case 'views':
+      case 'react':
+        triggerEmojiShower('🔥');
+        res = (
+          <div className="text-xs text-text-muted space-y-1">
+            <p className="text-accent font-semibold">⚡ Live Telemetry Active</p>
+            <p>1,428+ Live Views • Sent 🔥 reaction celebration across screen!</p>
           </div>
         );
         break;
@@ -93,6 +120,7 @@ export function InteractiveTerminal() {
         res = (
           <div className="text-xs text-text-muted space-y-1">
             <p className="text-text-primary font-semibold">Ayush Mehta — Software &amp; Security Engineer</p>
+            <p>Former Security Engineer Intern @ <span className="text-amber-400 font-semibold">Amazon</span></p>
             <p className="leading-relaxed">{profileData.heroBio}</p>
           </div>
         );
@@ -191,15 +219,15 @@ export function InteractiveTerminal() {
         </form>
       </div>
 
-      {/* Quick Interactive Command Pills */}
+      {/* Interactive Command Pills */}
       <div className="px-4 py-2 bg-surface-elevated/50 border-t border-border flex flex-wrap items-center gap-1.5 text-[11px] text-text-subtle">
-        <span className="mr-1 text-[10px] uppercase font-semibold">Quick Actions:</span>
-        {['journey', 'projects', 'skills', 'contact', 'whoami', 'clear'].map((cmd) => (
+        <span className="mr-1 text-[10px] uppercase font-semibold">Actions:</span>
+        {['journey', 'projects', 'skills', 'certs', 'contact', 'whoami', 'clear'].map((cmd) => (
           <button
             key={cmd}
             type="button"
             onClick={() => executeCommand(cmd)}
-            className="px-2 py-0.5 rounded bg-surface border border-border/70 hover:border-primary hover:text-primary transition-colors cursor-pointer"
+            className="px-2 py-0.5 rounded bg-surface border border-border/70 hover:border-primary hover:text-primary transition-colors cursor-pointer active:scale-95"
           >
             {cmd}
           </button>

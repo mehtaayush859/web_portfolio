@@ -9,6 +9,7 @@ import { Heading } from '@/components/ui/Heading';
 import { Button } from '@/components/ui/Button';
 import { useToast } from '@/components/ui/Toast';
 import { MotionWrapper } from '@/components/motion/MotionWrapper';
+import { cn } from '@/lib/utils';
 
 interface FormState {
   name: string;
@@ -31,6 +32,7 @@ export function ContactSection() {
     message: '',
   });
 
+  const [selectedTopic, setSelectedTopic] = React.useState<string>('');
   const [errors, setErrors] = React.useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [isSubmitted, setIsSubmitted] = React.useState(false);
@@ -125,7 +127,10 @@ export function ContactSection() {
     const form = formRef.current;
     const sendName = formState.name || (form?.elements.namedItem('name') as HTMLInputElement | null)?.value || '';
     const sendEmail = formState.email || (form?.elements.namedItem('email') as HTMLInputElement | null)?.value || '';
-    const sendMessage = formState.message || (form?.elements.namedItem('message') as HTMLTextAreaElement | null)?.value || '';
+    const rawMessage = formState.message || (form?.elements.namedItem('message') as HTMLTextAreaElement | null)?.value || '';
+    const sendMessage = selectedTopic
+      ? `[Topic / Suggestion: ${selectedTopic}]\n\n${rawMessage}`
+      : rawMessage;
 
     try {
       const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID;
@@ -154,6 +159,7 @@ export function ContactSection() {
       // Reset both DOM form and React state
       formRef.current?.reset();
       setFormState({ name: '', email: '', message: '' });
+      setSelectedTopic('');
       setErrors({});
       setIsSubmitted(true);
 
@@ -385,6 +391,46 @@ export function ContactSection() {
                             <span>{errors.email}</span>
                           </p>
                         )}
+                      </div>
+                    </div>
+
+                    {/* Optional Roadmap Idea / Topic Selector */}
+                    <div>
+                      <div className="flex items-center justify-between mb-1.5">
+                        <label className="block text-xs font-mono font-medium text-text-subtle">
+                          Topic or Feature You&apos;d Like to See Next (Optional)
+                        </label>
+                        {selectedTopic && (
+                          <button
+                            type="button"
+                            onClick={() => setSelectedTopic('')}
+                            className="text-[11px] font-mono text-primary hover:underline cursor-pointer"
+                          >
+                            Clear
+                          </button>
+                        )}
+                      </div>
+                      <div className="flex flex-wrap gap-1.5">
+                        {[
+                          '💼 Engineering / SDE Role',
+                          '⚡ More AI & ML Projects',
+                          '🛡️ Security Architecture Demos',
+                          '💡 Portfolio Feedback & Ideas',
+                        ].map((topic) => (
+                          <button
+                            key={topic}
+                            type="button"
+                            onClick={() => setSelectedTopic((prev) => (prev === topic ? '' : topic))}
+                            className={cn(
+                              'px-2.5 py-1 rounded-md text-xs font-mono transition-all border cursor-pointer select-none',
+                              selectedTopic === topic
+                                ? 'bg-primary/15 border-primary text-primary font-semibold'
+                                : 'bg-surface-elevated border-border/80 text-text-muted hover:border-primary/40 hover:text-text-primary'
+                            )}
+                          >
+                            {topic}
+                          </button>
+                        ))}
                       </div>
                     </div>
 

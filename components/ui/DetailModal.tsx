@@ -9,7 +9,7 @@ export interface DetailModalProps {
   isOpen: boolean;
   onClose: () => void;
   badge?: string;
-  badgeVariant?: 'primary' | 'accent';
+  badgeVariant?: 'primary' | 'accent' | 'amber';
   status?: string;
   title: string;
   subtitle: string;
@@ -46,6 +46,28 @@ export function DetailModal({
   actionLink,
 }: DetailModalProps) {
   const isAccent = badgeVariant === 'accent';
+  const isAmber = badgeVariant === 'amber';
+
+  const themeClasses = {
+    topLine: isAmber
+      ? 'from-amber-400 via-amber-400/40 to-transparent'
+      : isAccent
+      ? 'from-accent/70 via-accent/30 to-transparent'
+      : 'from-primary/70 via-primary/30 to-transparent',
+    border: isAmber
+      ? 'border-amber-500/50 shadow-amber-500/10'
+      : isAccent
+      ? 'border-accent/40 shadow-accent/5'
+      : 'border-border',
+    badge: isAmber
+      ? 'bg-amber-500/15 text-amber-400 border-amber-500/30'
+      : isAccent
+      ? 'bg-accent/10 text-accent border-accent/30'
+      : 'bg-primary/10 text-primary border-primary/30',
+    icon: isAmber ? 'text-amber-400' : isAccent ? 'text-accent' : 'text-primary',
+    textHighlight: isAmber ? 'text-amber-400' : isAccent ? 'text-accent' : 'text-primary',
+    closeHover: isAmber ? 'hover:text-amber-400' : isAccent ? 'hover:text-accent' : 'hover:text-text-primary',
+  };
 
   // Trap escape key & lock background scroll & broadcast modal state
   React.useEffect(() => {
@@ -98,16 +120,14 @@ export function DetailModal({
             onClick={(e) => e.stopPropagation()}
             className={cn(
               'relative w-full max-w-xl rounded-2xl border bg-surface p-5 sm:p-7 z-10 max-h-[88vh] flex flex-col justify-between overflow-hidden shadow-2xl',
-              isAccent ? 'border-accent/40 shadow-accent/5' : 'border-border'
+              themeClasses.border
             )}
           >
             {/* Decorative Top Accent Line */}
             <div
               className={cn(
                 'absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r',
-                isAccent
-                  ? 'from-accent/70 via-accent/30 to-transparent'
-                  : 'from-primary/70 via-primary/30 to-transparent'
+                themeClasses.topLine
               )}
               aria-hidden="true"
             />
@@ -118,7 +138,7 @@ export function DetailModal({
               aria-label="Close dialog"
               className={cn(
                 'absolute top-4 right-4 p-2 rounded-lg text-text-subtle hover:bg-surface-elevated transition-colors cursor-pointer z-20',
-                isAccent ? 'hover:text-accent' : 'hover:text-text-primary'
+                themeClasses.closeHover
               )}
             >
               <X className="h-5 w-5" />
@@ -133,9 +153,7 @@ export function DetailModal({
                     <span
                       className={cn(
                         'text-[10px] sm:text-[11px] font-mono uppercase tracking-wider font-semibold px-2.5 py-0.5 rounded-full border',
-                        badgeVariant === 'accent'
-                          ? 'bg-accent/10 text-accent border-accent/30'
-                          : 'bg-primary/10 text-primary border-primary/30'
+                        themeClasses.badge
                       )}
                     >
                       {badge.includes('//') ? (
@@ -174,14 +192,14 @@ export function DetailModal({
                   <div className="flex flex-wrap items-center gap-3 mt-2 text-xs font-mono text-text-subtle">
                     {period && (
                       <span className="flex items-center gap-1.5">
-                        <Calendar className={cn('h-3.5 w-3.5', isAccent ? 'text-accent' : 'text-primary')} />
+                        <Calendar className={cn('h-3.5 w-3.5', themeClasses.icon)} />
                         {period}
                       </span>
                     )}
                     {period && location && <span>•</span>}
                     {location && (
                       <span className="flex items-center gap-1.5">
-                        <MapPin className={cn('h-3.5 w-3.5', isAccent ? 'text-accent' : 'text-primary')} />
+                        <MapPin className={cn('h-3.5 w-3.5', themeClasses.icon)} />
                         {location}
                       </span>
                     )}
@@ -197,7 +215,7 @@ export function DetailModal({
                       key={idx}
                       className="flex sm:flex-col items-center sm:justify-center justify-between gap-1 text-left sm:text-center px-1 py-1 sm:py-0 border-b border-border/30 sm:border-0 last:border-0"
                     >
-                      <span className={cn('text-sm font-mono font-bold shrink-0', isAccent ? 'text-accent' : 'text-primary')}>
+                      <span className={cn('text-sm font-mono font-bold shrink-0', themeClasses.textHighlight)}>
                         {metric.value}
                       </span>
                       <span className="text-xs sm:text-[11px] font-mono text-text-subtle leading-tight">
@@ -221,7 +239,7 @@ export function DetailModal({
               {bullets && bullets.length > 0 && (
                 <div>
                   <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-text-subtle mb-2.5 flex items-center gap-1.5">
-                    <Sparkles className={cn('h-3.5 w-3.5', isAccent ? 'text-accent' : 'text-primary')} />
+                    <Sparkles className={cn('h-3.5 w-3.5', themeClasses.icon)} />
                     <span>Key Highlights</span>
                   </h4>
                   <ul className="space-y-2.5">
@@ -230,7 +248,7 @@ export function DetailModal({
                         key={idx}
                         className="text-xs sm:text-sm text-text-muted leading-relaxed flex items-start gap-2.5"
                       >
-                        <span className={cn('mt-1 shrink-0 font-bold', isAccent ? 'text-accent' : 'text-primary')}>•</span>
+                        <span className={cn('mt-1 shrink-0 font-bold', themeClasses.textHighlight)}>•</span>
                         <span>{bullet}</span>
                       </li>
                     ))}

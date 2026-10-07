@@ -78,7 +78,7 @@
 /* Base Styles */
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 5rem;
+  scroll-padding-top: 5.5rem;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -94,8 +94,12 @@ body {
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  -webkit-overflow-scrolling: touch;
   overflow-x: hidden;
+}
+
+/* Buttery-Smooth Mobile Tap Response */
+button, a, [role="button"] {
+  -webkit-tap-highlight-color: transparent;
 }
 
 /* Glassmorphism utility */
@@ -128,29 +132,22 @@ body {
   scrollbar-width: none;
 }
 
-/* Instant Hero Above-The-Fold CSS Animations (bypasses JS hydration and Safari IntersectionObserver delays) */
-@keyframes heroFadeIn {
-  0% {
-    opacity: 0;
-    transform: translateY(16px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
+/* Optimized Mobile Touch-Swipe Track: Hardware-accelerated, zero-friction momentum, contained swipe */
+.swipe-track {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+  touch-action: pan-x pan-y;
+  transform: translateZ(0);
 }
 
-.animate-hero-badge {
-  animation: heroFadeIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) 0.05s both;
-}
-.animate-hero-title {
-  animation: heroFadeIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) 0.12s both;
-}
-.animate-hero-bio {
-  animation: heroFadeIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
-}
+/* Instant Zero-Latency Above-The-Fold Rendering (100% visible immediately, zero pop-in lag) */
+.animate-hero-badge,
+.animate-hero-title,
+.animate-hero-bio,
 .animate-hero-cta {
-  animation: heroFadeIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) 0.28s both;
+  opacity: 1 !important;
+  transform: none !important;
+  animation: none !important;
 }
 
 /* Strict Accessibility: Reduced Motion Override */

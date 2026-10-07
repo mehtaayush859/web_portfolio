@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/Badge';
 import { ParticleCanvas } from '@/components/ui/ParticleCanvas';
 import { HeroCharacterCard } from '@/components/ui/HeroCharacterCard';
 import { InteractiveTerminal } from '@/components/ui/InteractiveTerminal';
+import { HeroLivePulse } from '@/components/ui/HeroLivePulse';
 
 export function HeroSection() {
   return (
@@ -106,8 +107,11 @@ export function HeroSection() {
               </div>
             </div>
 
+            {/* Live Portfolio Views Telemetry & Instant Sentiment Reaction Pulse */}
+            <HeroLivePulse />
+
             {/* Interactive CLI Terminal: Dedicated to Desktop (avoids mobile touchscreen keyboard popups) */}
-            <div className="w-full max-w-xl hidden lg:block">
+            <div className="w-full max-w-xl hidden lg:block mt-6">
               <InteractiveTerminal />
             </div>
           </div>
