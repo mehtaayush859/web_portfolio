@@ -123,8 +123,9 @@ async function resolveLocation(req: NextRequest, clientIp: string) {
         clientIp.startsWith('10.') ||
         clientIp === '::1';
 
-      // If local IP, query without IP to get the machine's public egress IP info
-      const queryParam = isLocalIp ? '' : clientIp;
+      // If local IP or invalid IP characters, query without IP to get the machine's public egress IP info
+      const isCleanIp = /^[0-9a-fA-F:.]+$/.test(clientIp);
+      const queryParam = (!isLocalIp && isCleanIp) ? encodeURIComponent(clientIp) : '';
       const geoRes = await fetch(
         `http://ip-api.com/json/${queryParam}?fields=status,country,regionName,city,org,isp`,
         { signal: AbortSignal.timeout(1400) }
@@ -132,10 +133,10 @@ async function resolveLocation(req: NextRequest, clientIp: string) {
       if (geoRes.ok) {
         const geo = await geoRes.json();
         if (geo.status === 'success') {
-          city = geo.city || city;
-          region = geo.regionName || region;
-          country = geo.country || country;
-          org = geo.org || geo.isp || '';
+          city = String(geo.city || city).slice(0, 80);
+          region = String(geo.regionName || region).slice(0, 80);
+          country = String(geo.country || country).slice(0, 80);
+          org = String(geo.org || geo.isp || '').slice(0, 100);
         }
       }
     } catch {
@@ -156,24 +157,25 @@ function formatReferrer(clientReferrer?: string): string {
     return 'Direct Visit (Typed URL or Bookmark)';
   }
 
-  const ref = clientReferrer.toLowerCase();
+  const safeRef = clientReferrer.slice(0, 300);
+  const ref = safeRef.toLowerCase();
   if (ref.includes('linkedin.com')) {
-    return `LinkedIn (${clientReferrer})`;
+    return `LinkedIn (${safeRef})`;
   }
   if (ref.includes('github.com')) {
-    return `GitHub (${clientReferrer})`;
+    return `GitHub (${safeRef})`;
   }
   if (ref.includes('google.')) {
     return 'Google Search';
   }
   if (ref.includes('x.com') || ref.includes('twitter.com') || ref.includes('t.co')) {
-    return `X / Twitter (${clientReferrer})`;
+    return `X / Twitter (${safeRef})`;
   }
-  if (ref.includes('amehta.vercel.app') || ref.includes('localhost')) {
+  if (ref.includes('amehta.vercel.app') || ref.includes('ameht.vercel.app') || ref.includes('localhost')) {
     return 'Direct Navigation';
   }
 
-  return clientReferrer;
+  return safeRef;
 }
 
 // Non-blocking Webhook Dispatcher (Discord or Telegram)
@@ -187,20 +189,22 @@ function dispatchWebhookAlert(payload: {
   userAgent: string;
   views: number;
 }) {
-  const discordWebhook =
-    process.env.DISCORD_WEBHOOK_URL ||
-    'https://discord.com/api/webhooks/1557159168656285776/6fow6cBHXBqYK-NoRajnt3QIsrOsWa6PCHYpUQpWFKqyLDUpKu0fLNFque43rbquAkih';
+  const discordWebhook = process.env.DISCORD_WEBHOOK_URL;
 
-  if (!discordWebhook) return;
+  if (!discordWebhook) {
+    // Webhook not configured or disabled; skip notification cleanly
+    return;
+  }
 
   const isVisit = payload.type === 'visit';
+  const safeReaction = String(payload.reaction || 'Reaction').slice(0, 16);
   const title = isVisit
     ? `🚀 New Visitor Viewed Ayush's Portfolio!`
-    : `🎉 Visitor Sent ${payload.reaction || 'Reaction'} Reaction!`;
+    : `🎉 Visitor Sent ${safeReaction} Reaction!`;
 
   // Clean User Agent format
   let simpleDevice = 'Desktop Browser';
-  const ua = payload.userAgent.toLowerCase();
+  const ua = (payload.userAgent || '').toLowerCase();
   if (ua.includes('iphone') || ua.includes('ipad')) {
     simpleDevice = 'iPhone / Safari Mobile';
   } else if (ua.includes('android')) {
@@ -210,6 +214,11 @@ function dispatchWebhookAlert(payload: {
   } else if (ua.includes('windows')) {
     simpleDevice = 'Windows PC';
   }
+
+  // Safe field truncations to guarantee Discord embed compliance
+  const safeLocation = (payload.location || 'Unknown Location').slice(0, 100);
+  const safeReferrer = (payload.referrer || 'Direct Visit').slice(0, 250);
+  const safeOrg = payload.org ? payload.org.slice(0, 100) : '';
 
   // Dispatch to Discord
   fetch(discordWebhook, {
@@ -223,12 +232,12 @@ function dispatchWebhookAlert(payload: {
           fields: [
             {
               name: '📍 Location',
-              value: payload.location,
+              value: safeLocation,
               inline: true,
             },
             {
               name: '🔗 Referrer Source',
-              value: payload.referrer,
+              value: safeReferrer,
               inline: true,
             },
             {
@@ -236,11 +245,11 @@ function dispatchWebhookAlert(payload: {
               value: `${payload.views.toLocaleString()}`,
               inline: true,
             },
-            ...(payload.org
+            ...(safeOrg
               ? [
                   {
                     name: '🏢 Network / ISP',
-                    value: payload.org,
+                    value: safeOrg,
                     inline: true,
                   },
                 ]
@@ -291,6 +300,9 @@ export async function POST(req: NextRequest) {
       const now = Date.now();
       const lastAlert = lastAlertTimeByIp.get(ip) || 0;
       if (now - lastAlert > 10000) {
+        if (lastAlertTimeByIp.size > 1000) {
+          lastAlertTimeByIp.clear();
+        }
         lastAlertTimeByIp.set(ip, now);
         void (async () => {
           try {
