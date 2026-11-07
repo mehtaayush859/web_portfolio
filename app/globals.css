@@ -1,0 +1,509 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:is(.dark *));
+
+/* ==========================================================================
+   Design tokens
+   Two lenses tell the story: Build (cyan) and Secure (emerald).
+   ========================================================================== */
+:root {
+  /* Light theme */
+  --background: #f6f8fb;
+  --surface: #ffffff;
+  --surface-elevated: #eef2f7;
+  --border: #dde4ee;
+  --border-active: #047857;
+  --primary: #047857; /* Secure lens (emerald); white text 5.48:1 */
+  --primary-hover: #065f46;
+  --primary-foreground: #ffffff;
+  --secondary: #eef2f7;
+  --secondary-foreground: #0f172a;
+  --accent: #0e7490; /* Build lens (cyan) */
+  --accent-hover: #155e75;
+  --accent-foreground: #ffffff;
+  --violet: #6d28d9;
+  --text-primary: #0b1220;
+  --text-muted: #475569;
+  --text-subtle: #566476;
+  --destructive: #dc2626;
+  --destructive-foreground: #ffffff;
+  --radius: 0.625rem;
+  --glow-emerald: 0 0 20px -3px rgba(5, 150, 105, 0.25);
+  --aurora-1: rgba(14, 116, 144, 0.14);
+  --aurora-2: rgba(4, 120, 87, 0.12);
+  --aurora-3: rgba(109, 40, 217, 0.08);
+  --grid-dot: rgba(15, 23, 42, 0.09);
+  --card-glow: rgba(14, 116, 144, 0.10);
+  --lens-color: var(--text-primary);
+}
+
+.dark {
+  /* Dark theme ("obsidian") */
+  --background: #05070b;
+  --surface: #0c1018;
+  --surface-elevated: #131926;
+  --border: rgba(148, 163, 184, 0.12);
+  --border-active: rgba(16, 185, 129, 0.45);
+  --primary: #10b981;
+  --primary-hover: #34d399;
+  --primary-foreground: #04110c;
+  --secondary: #131926;
+  --secondary-foreground: #f8fafc;
+  --accent: #22d3ee;
+  --accent-hover: #67e8f9;
+  --accent-foreground: #031216;
+  --violet: #a78bfa;
+  --text-primary: #f3f6fb;
+  --text-muted: #9aa7b8;
+  --text-subtle: #8590a3;
+  --destructive: #ef4444;
+  --destructive-foreground: #ffffff;
+  --radius: 0.625rem;
+  --glow-emerald: 0 0 25px -4px rgba(16, 185, 129, 0.25);
+  --aurora-1: rgba(34, 211, 238, 0.13);
+  --aurora-2: rgba(16, 185, 129, 0.12);
+  --aurora-3: rgba(139, 92, 246, 0.12);
+  --grid-dot: rgba(148, 163, 184, 0.10);
+  --card-glow: rgba(34, 211, 238, 0.10);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-elevated: var(--surface-elevated);
+  --color-border: var(--border);
+  --color-border-active: var(--border-active);
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-violet: var(--violet);
+  --color-text-primary: var(--text-primary);
+  --color-text-muted: var(--text-muted);
+  --color-text-subtle: var(--text-subtle);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --font-serif: var(--font-instrument-serif);
+  --radius-sm: 0.375rem;
+  --radius-md: var(--radius);
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
+  --radius-full: 9999px;
+}
+
+/* ==========================================================================
+   Base
+   ========================================================================== */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5.5rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+body {
+  background-color: var(--background);
+  color: var(--text-primary);
+  font-family: var(--font-geist-sans), system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+button, a, [role="button"] {
+  -webkit-tap-highlight-color: transparent;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--accent) 30%, transparent);
+}
+
+/* Serif italic accent used for one or two emphasised words per heading. */
+.font-display {
+  font-family: var(--font-instrument-serif), Georgia, serif;
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+/* ==========================================================================
+   Surfaces
+   ========================================================================== */
+.glass {
+  background-color: color-mix(in srgb, var(--surface) 72%, transparent);
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  border: 1px solid var(--border);
+}
+
+/* Phones: blurred fixed layers re-blur on every scroll frame. Use a solid surface instead. */
+@media (max-width: 767px) {
+  .glass {
+    background-color: color-mix(in srgb, var(--surface) 96%, transparent);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+
+.glow-emerald {
+  box-shadow: var(--glow-emerald);
+}
+
+/* Dotted grid that fades out towards the edges. */
+.bg-grid-pattern {
+  background-image: radial-gradient(var(--grid-dot) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+.bg-grid-fade {
+  background-image: radial-gradient(var(--grid-dot) 1px, transparent 1px);
+  background-size: 26px 26px;
+  -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, #000 40%, transparent 100%);
+  mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, #000 40%, transparent 100%);
+}
+
+/* Static aurora: layered radial gradients, no blur filters (cheap to paint, even on phones). */
+.aurora {
+  background:
+    radial-gradient(40rem 26rem at 12% 8%, var(--aurora-1), transparent 70%),
+    radial-gradient(34rem 24rem at 88% 18%, var(--aurora-2), transparent 70%),
+    radial-gradient(36rem 28rem at 60% 100%, var(--aurora-3), transparent 70%);
+}
+
+/* Subtle film grain (desktop only). */
+@media (min-width: 768px) {
+  .grain::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.05;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    mix-blend-mode: overlay;
+  }
+}
+
+/* Gradient text for the name / key words. */
+.text-gradient {
+  background: linear-gradient(100deg, var(--accent) 0%, var(--primary) 55%, var(--violet) 110%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Card with a cursor-following spotlight (vars set by SpotlightEffects; desktop only). */
+.spotlight {
+  position: relative;
+  isolation: isolate;
+}
+.spotlight::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  z-index: -1;
+  transition: opacity 0.3s ease;
+  background: radial-gradient(22rem circle at var(--mx, 50%) var(--my, 50%), var(--card-glow), transparent 60%);
+}
+@media (hover: hover) and (pointer: fine) {
+  .spotlight:hover::before {
+    opacity: 1;
+  }
+}
+
+/* Thin gradient hairline on top of a card. */
+.hairline-top::after {
+  content: "";
+  position: absolute;
+  left: 1.25rem;
+  right: 1.25rem;
+  top: -1px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent), var(--primary), transparent);
+  opacity: 0.6;
+}
+
+/* ==========================================================================
+   Lens switch (Build / Secure). Pure CSS on server-rendered HTML:
+   the switch only sets <html data-lens="...">.
+   ========================================================================== */
+[data-lens-item],
+.lens-card {
+  transition: opacity 0.35s ease, filter 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
+}
+
+/* Non-matching items: greyscale, plus a light fade in dark mode only. Measured: dimmed text
+   stays >= 4.75:1 in dark (opacity .85) and keeps full contrast in light (no fade). */
+html[data-lens="build"] [data-lens-item]:not([data-lens-item~="build"]),
+html[data-lens="secure"] [data-lens-item]:not([data-lens-item~="secure"]) {
+  filter: grayscale(1);
+}
+html.dark[data-lens="build"] [data-lens-item]:not([data-lens-item~="build"]),
+html.dark[data-lens="secure"] [data-lens-item]:not([data-lens-item~="secure"]) {
+  opacity: 0.85;
+}
+
+/* Matching items: the card (.lens-card) gets a border and glow in the lens colour. */
+html[data-lens="build"] [data-lens-item~="build"] .lens-card,
+html[data-lens="build"] .lens-card[data-lens-item~="build"],
+html[data-lens="secure"] [data-lens-item~="secure"] .lens-card,
+html[data-lens="secure"] .lens-card[data-lens-item~="secure"] {
+  border-color: color-mix(in srgb, var(--lens-color) 65%, transparent);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--lens-color) 35%, transparent), 0 20px 50px -28px var(--lens-color);
+}
+
+/* Lens-specific copy: only the variant for the active lens is shown. */
+[data-lens-show] {
+  display: none;
+}
+html:not([data-lens]) [data-lens-show="all"],
+html[data-lens="all"] [data-lens-show="all"],
+html[data-lens="build"] [data-lens-show="build"],
+html[data-lens="secure"] [data-lens-show="secure"] {
+  display: inline;
+}
+
+html[data-lens="build"] {
+  --lens-color: var(--accent);
+}
+html[data-lens="secure"] {
+  --lens-color: var(--primary);
+}
+
+/* ==========================================================================
+   Motion
+   ========================================================================== */
+
+/* Scroll-driven reveal (progressive enhancement: browsers without support show content as-is). */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal {
+      animation: reveal-up linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 40%;
+    }
+  }
+}
+@keyframes reveal-up {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Infinite logo/organisation marquee (paused for reduced motion). */
+.marquee {
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+}
+.marquee-track {
+  animation: marquee 38s linear infinite;
+}
+.marquee:hover .marquee-track {
+  animation-play-state: paused;
+}
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* Twinkling sparkles in the hero (desktop). */
+@keyframes twinkle {
+  0%, 100% { opacity: 0.15; transform: scale(0.8); }
+  50% { opacity: 1; transform: scale(1); }
+}
+.sparkle {
+  animation: twinkle 3.2s ease-in-out infinite;
+}
+
+/* Holographic sheen sweep on the portrait card. */
+@keyframes sheen {
+  0% { transform: translateX(-120%) skewX(-18deg); }
+  60%, 100% { transform: translateX(220%) skewX(-18deg); }
+}
+.sheen::after {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 40%;
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.16), transparent);
+  animation: sheen 6s ease-in-out infinite;
+}
+
+/* Scanning line over the portrait (security motif). */
+/* Scan line over the portrait. The element covers the whole frame and the 2px line is its
+   ::after, so the sweep is a transform (GPU-composited). Animating `top` forced a layout on
+   the main thread every frame, forever. */
+@keyframes scan {
+  0% { transform: translateY(0); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { transform: translateY(100%); opacity: 0; }
+}
+.scanline {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  animation: scan 4.5s ease-in-out infinite;
+}
+.scanline::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--primary), transparent);
+  box-shadow: 0 0 12px var(--primary);
+}
+
+/* Horizontal swipe tracks */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.swipe-track {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+  touch-action: pan-x pan-y;
+}
+
+/* Phones: no infinite decorative animations (battery + scroll smoothness). */
+@media (max-width: 767px) {
+  .sparkle,
+  .sheen::after,
+  .scanline {
+    animation: none;
+  }
+  .scanline {
+    display: none;
+  }
+}
+
+/* Strict accessibility: reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .marquee-track {
+    animation: none !important;
+  }
+}
+
+/* Animated data-flow connector used by ArchitectureStrip. */
+/* Dashed connector between architecture nodes. The dashes live on a wider ::before that slides
+   by one dash period with a transform (GPU-composited); animating background-position
+   repainted all 13 connectors on the main thread every frame. */
+.flow-line {
+  position: relative;
+  overflow: hidden;
+  opacity: 0.7;
+}
+.flow-line::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 0 -6px;
+  background-image: linear-gradient(90deg, var(--accent) 50%, transparent 50%);
+  background-size: 6px 1px;
+}
+@media (min-width: 768px) and (prefers-reduced-motion: no-preference) {
+  .flow-line::before {
+    animation: flow 1.2s linear infinite;
+  }
+}
+@keyframes flow {
+  to {
+    transform: translateX(6px);
+  }
+}
+/* Note: never put .reveal on the same element as [data-lens-item]. An animation with
+   fill-mode "both" overrides the lens opacity rule; keep reveal on an inner element. */
+
+/* ==========================================================================
+   Phase 2 motion (all CSS-driven, progressive enhancement, off for reduced motion)
+   ========================================================================== */
+
+/* Reading progress bar at the very top of the page. */
+.scroll-progress {
+  display: none;
+}
+@supports (animation-timeline: scroll()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .scroll-progress {
+      display: block;
+      position: fixed;
+      inset: 0 0 auto 0;
+      height: 2px;
+      z-index: 60;
+      pointer-events: none;
+      transform-origin: 0 50%;
+      background: linear-gradient(90deg, var(--accent), var(--primary), var(--violet));
+      animation: grow-x linear both;
+      animation-timeline: scroll(root);
+    }
+  }
+}
+@keyframes grow-x {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+/* Experience timeline: the bright line fills as the list scrolls through the viewport.
+   Without support it is simply shown in full. */
+.timeline-fill {
+  transform-origin: 50% 0;
+}
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .timeline-fill {
+      animation: grow-y linear both;
+      animation-timeline: view();
+      animation-range: cover 15% cover 70%;
+    }
+  }
+}
+@keyframes grow-y {
+  from { transform: scaleY(0); }
+  to { transform: scaleY(1); }
+}
+
+/* Theme switch: circular reveal from the toggle button (View Transitions API). */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+::view-transition-new(root) {
+  animation: theme-reveal 0.55s ease-out;
+}
+@keyframes theme-reveal {
+  from { clip-path: circle(0 at var(--vt-x, 50%) var(--vt-y, 0)); }
+  to { clip-path: circle(150vmax at var(--vt-x, 50%) var(--vt-y, 0)); }
+}

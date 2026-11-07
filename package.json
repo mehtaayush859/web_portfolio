@@ -1,0 +1,43 @@
+{
+  "name": "personal_portfolio_website",
+  "version": "0.2.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --webpack",
+    "dev:phone": "next dev --webpack -H 0.0.0.0",
+    "build": "next build --webpack",
+    "start": "next start",
+    "preview:phone": "LOCAL_HTTP_PREVIEW=1 next build --webpack && PULSE_MEMORY_STORE=1 next start -H 0.0.0.0",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@emailjs/browser": "^4.4.1",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.487.0",
+    "motion": "^12.4.7",
+    "next": "^16.4.5",
+    "next-themes": "^0.4.6",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "tailwind-merge": "^3.1.0"
+  },
+  "devDependencies": {
+    "@next/eslint-plugin-next": "^16.4.5",
+    "@tailwindcss/postcss": "^4.1.2",
+    "@types/node": "^20.17.30",
+    "@types/react": "^19.1.0",
+    "@types/react-dom": "^19.1.1",
+    "@typescript-eslint/parser": "^8.72.1",
+    "eslint": "^9.39.5",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "tailwindcss": "^4.1.2",
+    "typescript": "^5.8.2"
+  },
+  "overrides": {
+    "@typescript-eslint/typescript-estree": {
+      "minimatch": "^11.0.1"
+    }
+  }
+}
